@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdb.scm.base.mapper.ErpDepositStoresiteMapper">
+    
+    <resultMap type="ErpDepositStoresite" id="ErpDepositStoresiteResult">
+        <result property="depositStoresiteId"    column="deposit_storesite_id"    />
+        <result property="storesiteCode"    column="storesite_code"    />
+        <result property="storesiteName"    column="storesite_name"    />
+        <result property="storesiteBarcode"    column="storesite_barcode"    />
+        <result property="regionId"    column="region_id"    />
+        <result property="storeType"    column="store_type"    />
+        <result property="storeAttribute"    column="store_attribute"    />
+        <result property="storeSizeId"    column="store_size_id"    />
+        <result property="outbound"    column="outbound"    />
+        <result property="isEmpty"    column="is_empty"    />
+        <result property="isDisable"    column="is_disable"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="tenantId"    column="tenant_id"    />
+    </resultMap>
+
+    <sql id="selectErpDepositStoresiteVo">
+        select deposit_storesite_id, storesite_code, storesite_name, storesite_barcode, region_id, store_type, store_attribute, store_size_id, outbound, is_empty, is_disable, del_flag, create_by, create_time, update_by, update_time, remark, tenant_id from erp_deposit_storesite
+    </sql>
+
+    <select id="selectErpDepositStoresiteList" parameterType="ErpDepositStoresite" resultMap="ErpDepositStoresiteResult">
+        <include refid="selectErpDepositStoresiteVo"/>
+        <where>  
+            <if test="storesiteCode != null  and storesiteCode != ''"> and storesite_code = #{storesiteCode}</if>
+            <if test="storesiteName != null  and storesiteName != ''"> and storesite_name like concat('%', #{storesiteName}, '%')</if>
+            <if test="regionId != null "> and region_id = #{regionId}</if>
+            <if test="storeType != null  and storeType != ''"> and store_type = #{storeType}</if>
+            <if test="storeAttribute != null  and storeAttribute != ''"> and store_attribute = #{storeAttribute}</if>
+        </where>
+    </select>
+    
+    <select id="selectErpDepositStoresiteById" parameterType="Long" resultMap="ErpDepositStoresiteResult">
+        <include refid="selectErpDepositStoresiteVo"/>
+        where deposit_storesite_id = #{depositStoresiteId}
+    </select>
+        
+    <insert id="insertErpDepositStoresite" parameterType="ErpDepositStoresite" useGeneratedKeys="true" keyProperty="depositStoresiteId">
+        insert into erp_deposit_storesite
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="storesiteCode != null">storesite_code,</if>
+            <if test="storesiteName != null">storesite_name,</if>
+            <if test="storesiteBarcode != null">storesite_barcode,</if>
+            <if test="regionId != null">region_id,</if>
+            <if test="storeType != null">store_type,</if>
+            <if test="storeAttribute != null">store_attribute,</if>
+            <if test="storeSizeId != null">store_size_id,</if>
+            <if test="outbound != null">outbound,</if>
+            <if test="isEmpty != null">is_empty,</if>
+            <if test="isDisable != null">is_disable,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="tenantId != null">tenant_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="storesiteCode != null">#{storesiteCode},</if>
+            <if test="storesiteName != null">#{storesiteName},</if>
+            <if test="storesiteBarcode != null">#{storesiteBarcode},</if>
+            <if test="regionId != null">#{regionId},</if>
+            <if test="storeType != null">#{storeType},</if>
+            <if test="storeAttribute != null">#{storeAttribute},</if>
+            <if test="storeSizeId != null">#{storeSizeId},</if>
+            <if test="outbound != null">#{outbound},</if>
+            <if test="isEmpty != null">#{isEmpty},</if>
+            <if test="isDisable != null">#{isDisable},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="tenantId != null">#{tenantId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateErpDepositStoresite" parameterType="ErpDepositStoresite">
+        update erp_deposit_storesite
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="storesiteCode != null">storesite_code = #{storesiteCode},</if>
+            <if test="storesiteName != null">storesite_name = #{storesiteName},</if>
+            <if test="storesiteBarcode != null">storesite_barcode = #{storesiteBarcode},</if>
+            <if test="regionId != null">region_id = #{regionId},</if>
+            <if test="storeType != null">store_type = #{storeType},</if>
+            <if test="storeAttribute != null">store_attribute = #{storeAttribute},</if>
+            <if test="storeSizeId != null">store_size_id = #{storeSizeId},</if>
+            <if test="outbound != null">outbound = #{outbound},</if>
+            <if test="isEmpty != null">is_empty = #{isEmpty},</if>
+            <if test="isDisable != null">is_disable = #{isDisable},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="tenantId != null">tenant_id = #{tenantId},</if>
+        </trim>
+        where deposit_storesite_id = #{depositStoresiteId}
+    </update>
+
+    <delete id="deleteErpDepositStoresiteById" parameterType="Long">
+        delete from erp_deposit_storesite where deposit_storesite_id = #{depositStoresiteId}
+    </delete>
+
+    <delete id="deleteErpDepositStoresiteByIds" parameterType="String">
+        delete from erp_deposit_storesite where deposit_storesite_id in 
+        <foreach item="depositStoresiteId" collection="array" open="(" separator="," close=")">
+            #{depositStoresiteId}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdb.scm.base.mapper.ErpAccountMapper">
+    
+    <resultMap type="ErpAccount" id="ErpAccountResult">
+        <result property="accountId"    column="account_id"    />
+        <result property="accountName"    column="account_name"    />
+        <result property="serialNo"    column="serial_no"    />
+        <result property="initialAmount"    column="initial_amount"    />
+        <result property="currentAmount"    column="current_amount"    />
+        <result property="remark"    column="remark"    />
+        <result property="isDefault"    column="is_default"    />
+        <result property="tenantId"    column="tenant_id"    />
+        <result property="deleteFlag"    column="delete_flag"    />
+    </resultMap>
+
+    <sql id="selectErpAccountVo">
+        select account_id, account_name, serial_no, initial_amount, current_amount, remark, is_default, tenant_id, delete_flag from erp_account
+    </sql>
+
+    <select id="selectErpAccountList" parameterType="ErpAccount" resultMap="ErpAccountResult">
+        <include refid="selectErpAccountVo"/>
+        <where>  
+            <if test="accountName != null  and accountName != ''"> and account_name like concat('%', #{accountName}, '%')</if>
+            <if test="serialNo != null  and serialNo != ''"> and serial_no = #{serialNo}</if>
+        </where>
+    </select>
+    
+    <select id="selectErpAccountById" parameterType="Long" resultMap="ErpAccountResult">
+        <include refid="selectErpAccountVo"/>
+        where account_id = #{accountId}
+    </select>
+        
+    <insert id="insertErpAccount" parameterType="ErpAccount" useGeneratedKeys="true" keyProperty="accountId">
+        insert into erp_account
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="accountName != null">account_name,</if>
+            <if test="serialNo != null">serial_no,</if>
+            <if test="initialAmount != null">initial_amount,</if>
+            <if test="currentAmount != null">current_amount,</if>
+            <if test="remark != null">remark,</if>
+            <if test="isDefault != null">is_default,</if>
+            <if test="tenantId != null">tenant_id,</if>
+            <if test="deleteFlag != null">delete_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="accountName != null">#{accountName},</if>
+            <if test="serialNo != null">#{serialNo},</if>
+            <if test="initialAmount != null">#{initialAmount},</if>
+            <if test="currentAmount != null">#{currentAmount},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="isDefault != null">#{isDefault},</if>
+            <if test="tenantId != null">#{tenantId},</if>
+            <if test="deleteFlag != null">#{deleteFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateErpAccount" parameterType="ErpAccount">
+        update erp_account
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="accountName != null">account_name = #{accountName},</if>
+            <if test="serialNo != null">serial_no = #{serialNo},</if>
+            <if test="initialAmount != null">initial_amount = #{initialAmount},</if>
+            <if test="currentAmount != null">current_amount = #{currentAmount},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="isDefault != null">is_default = #{isDefault},</if>
+            <if test="tenantId != null">tenant_id = #{tenantId},</if>
+            <if test="deleteFlag != null">delete_flag = #{deleteFlag},</if>
+        </trim>
+        where account_id = #{accountId}
+    </update>
+
+    <delete id="deleteErpAccountById" parameterType="Long">
+        delete from erp_account where account_id = #{accountId}
+    </delete>
+
+    <delete id="deleteErpAccountByIds" parameterType="String">
+        delete from erp_account where account_id in 
+        <foreach item="accountId" collection="array" open="(" separator="," close=")">
+            #{accountId}
+        </foreach>
+    </delete>
+</mapper>

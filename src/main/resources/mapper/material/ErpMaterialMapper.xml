@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdb.scm.material.mapper.ErpMaterialMapper">
+    
+    <resultMap type="ErpMaterial" id="ErpMaterialResult">
+        <result property="materialId"    column="material_id"    />
+        <result property="materialtypeId"    column="materialtype_id"    />
+        <result property="materialName"    column="material_name"    />
+        <result property="mfrs"    column="mfrs"    />
+        <result property="safetyStock"    column="safety_stock"    />
+        <result property="model"    column="model"    />
+        <result property="standard"    column="standard"    />
+        <result property="color"    column="color"    />
+        <result property="unit"    column="unit"    />
+        <result property="remark"    column="remark"    />
+        <result property="imgName"    column="img_name"    />
+        <result property="unitId"    column="unit_id"    />
+        <result property="enabled"    column="enabled"    />
+        <result property="otherField1"    column="other_field1"    />
+        <result property="otherField2"    column="other_field2"    />
+        <result property="otherField3"    column="other_field3"    />
+        <result property="enableSerialNumber"    column="enable_serial_number"    />
+        <result property="tenantId"    column="tenant_id"    />
+        <result property="deleteFlag"    column="delete_flag"    />
+        <association property="materialType" javaType="ErpMaterialType" resultMap="materialTypeValue"/>
+    </resultMap>
+
+    <resultMap id="materialTypeValue" type="ErpMaterialType">
+        <result property="materialTypeId"    column="material_type_id"    />
+        <result property="typeName"    column="type_name"    />
+    </resultMap>
+
+    <resultMap id="ErpMaterialErpExmaterialResult" type="ErpMaterial" extends="ErpMaterialResult">
+        <collection property="erpExmaterialList" notNullColumn="sub_exmaterial_id" javaType="java.util.List" resultMap="ErpExmaterialResult" />
+    </resultMap>
+
+    <resultMap type="ErpExmaterial" id="ErpExmaterialResult">
+        <result property="exmaterialId"    column="sub_exmaterial_id"    />
+        <result property="materialId"    column="sub_material_id"    />
+        <result property="barCode"    column="sub_bar_code"    />
+        <result property="commodityUnit"    column="sub_commodity_unit"    />
+        <result property="purchaseDecimal"    column="sub_purchase_decimal"    />
+        <result property="commodityDecimal"    column="sub_commodity_decimal"    />
+        <result property="wholesaleDecimal"    column="sub_wholesale_decimal"    />
+        <result property="lowDecimal"    column="sub_low_decimal"    />
+        <result property="defaultFlag"    column="sub_default_flag"    />
+        <result property="createTime"    column="sub_create_time"    />
+        <result property="createSerial"    column="sub_create_serial"    />
+        <result property="updateSerial"    column="sub_update_serial"    />
+        <result property="updateTime"    column="sub_update_time"    />
+        <result property="tenantId"    column="sub_tenant_id"    />
+        <result property="deleteFlag"    column="sub_delete_Flag"    />
+    </resultMap>
+
+    <sql id="selectErpMaterialVo">
+        select em.material_id, em.materialtype_id, em.material_name, em.mfrs, em.safety_stock, em.model, em.standard,
+               em.color, em.unit, em.remark, em.img_name, em.unit_id, em.enabled, em.other_field1, em.other_field2,
+               em.other_field3, em.enable_serial_number, em.tenant_id, em.delete_flag , emt.type_name
+        from erp_material em
+        left join erp_material_type emt on em.materialtype_id = emt.material_type_id
+    </sql>
+
+    <select id="selectErpMaterialList" parameterType="ErpMaterial" resultMap="ErpMaterialResult">
+        <include refid="selectErpMaterialVo"/>
+        <where>  
+            <if test="materialtypeId != null "> and materialtype_id = #{materialtypeId}</if>
+            <if test="materialName != null  and materialName != ''"> and material_name like concat('%', #{materialName}, '%')</if>
+            <if test="mfrs != null  and mfrs != ''"> and mfrs = #{mfrs}</if>
+        </where>
+    </select>
+    
+    <select id="selectErpMaterialById" parameterType="Long" resultMap="ErpMaterialErpExmaterialResult">
+        select a.material_id, a.materialtype_id, a.material_name, a.mfrs, a.safety_stock, a.model, a.standard, a.color, a.unit, a.remark, a.img_name, a.unit_id, a.enabled, a.other_field1, a.other_field2, a.other_field3, a.enable_serial_number, a.tenant_id, a.delete_flag,
+            b.exmaterial_id as sub_exmaterial_id, b.material_id as sub_material_id, b.bar_code as sub_bar_code, b.commodity_unit as sub_commodity_unit, b.purchase_decimal as sub_purchase_decimal, b.commodity_decimal as sub_commodity_decimal, b.wholesale_decimal as sub_wholesale_decimal, b.low_decimal as sub_low_decimal, b.default_flag as sub_default_flag, b.create_time as sub_create_time, b.create_serial as sub_create_serial, b.update_serial as sub_update_serial, b.update_time as sub_update_time, b.tenant_id as sub_tenant_id, b.delete_Flag as sub_delete_Flag
+        from erp_material a
+        left join erp_exmaterial b on b.material_id = a.material_id
+        where a.material_id = #{materialId}
+    </select>
+        
+    <insert id="insertErpMaterial" parameterType="ErpMaterial" useGeneratedKeys="true" keyProperty="materialId">
+        insert into erp_material
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="materialtypeId != null">materialtype_id,</if>
+            <if test="materialName != null">material_name,</if>
+            <if test="mfrs != null">mfrs,</if>
+            <if test="safetyStock != null">safety_stock,</if>
+            <if test="model != null">model,</if>
+            <if test="standard != null">standard,</if>
+            <if test="color != null">color,</if>
+            <if test="unit != null">unit,</if>
+            <if test="remark != null">remark,</if>
+            <if test="imgName != null">img_name,</if>
+            <if test="unitId != null">unit_id,</if>
+            <if test="enabled != null">enabled,</if>
+            <if test="otherField1 != null">other_field1,</if>
+            <if test="otherField2 != null">other_field2,</if>
+            <if test="otherField3 != null">other_field3,</if>
+            <if test="enableSerialNumber != null">enable_serial_number,</if>
+            <if test="tenantId != null">tenant_id,</if>
+            <if test="deleteFlag != null">delete_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="materialtypeId != null">#{materialtypeId},</if>
+            <if test="materialName != null">#{materialName},</if>
+            <if test="mfrs != null">#{mfrs},</if>
+            <if test="safetyStock != null">#{safetyStock},</if>
+            <if test="model != null">#{model},</if>
+            <if test="standard != null">#{standard},</if>
+            <if test="color != null">#{color},</if>
+            <if test="unit != null">#{unit},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="imgName != null">#{imgName},</if>
+            <if test="unitId != null">#{unitId},</if>
+            <if test="enabled != null">#{enabled},</if>
+            <if test="otherField1 != null">#{otherField1},</if>
+            <if test="otherField2 != null">#{otherField2},</if>
+            <if test="otherField3 != null">#{otherField3},</if>
+            <if test="enableSerialNumber != null">#{enableSerialNumber},</if>
+            <if test="tenantId != null">#{tenantId},</if>
+            <if test="deleteFlag != null">#{deleteFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateErpMaterial" parameterType="ErpMaterial">
+        update erp_material
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="materialtypeId != null">materialtype_id = #{materialtypeId},</if>
+            <if test="materialName != null">material_name = #{materialName},</if>
+            <if test="mfrs != null">mfrs = #{mfrs},</if>
+            <if test="safetyStock != null">safety_stock = #{safetyStock},</if>
+            <if test="model != null">model = #{model},</if>
+            <if test="standard != null">standard = #{standard},</if>
+            <if test="color != null">color = #{color},</if>
+            <if test="unit != null">unit = #{unit},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="imgName != null">img_name = #{imgName},</if>
+            <if test="unitId != null">unit_id = #{unitId},</if>
+            <if test="enabled != null">enabled = #{enabled},</if>
+            <if test="otherField1 != null">other_field1 = #{otherField1},</if>
+            <if test="otherField2 != null">other_field2 = #{otherField2},</if>
+            <if test="otherField3 != null">other_field3 = #{otherField3},</if>
+            <if test="enableSerialNumber != null">enable_serial_number = #{enableSerialNumber},</if>
+            <if test="tenantId != null">tenant_id = #{tenantId},</if>
+            <if test="deleteFlag != null">delete_flag = #{deleteFlag},</if>
+        </trim>
+        where material_id = #{materialId}
+    </update>
+
+    <delete id="deleteErpMaterialById" parameterType="Long">
+        delete from erp_material where material_id = #{materialId}
+    </delete>
+
+    <delete id="deleteErpMaterialByIds" parameterType="String">
+        delete from erp_material where material_id in 
+        <foreach item="materialId" collection="array" open="(" separator="," close=")">
+            #{materialId}
+        </foreach>
+    </delete>
+    
+    <delete id="deleteErpExmaterialByMaterialIds" parameterType="String">
+        delete from erp_exmaterial where material_id in 
+        <foreach item="materialId" collection="array" open="(" separator="," close=")">
+            #{materialId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteErpExmaterialByMaterialId" parameterType="Long">
+        delete from erp_exmaterial where material_id = #{materialId}
+    </delete>
+
+    <insert id="batchErpExmaterial">
+        insert into erp_exmaterial( exmaterial_id, material_id, bar_code, commodity_unit, purchase_decimal, commodity_decimal, wholesale_decimal, low_decimal, default_flag, create_time, create_serial, update_serial, update_time, tenant_id, delete_Flag) values
+		<foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.exmaterialId}, #{item.materialId}, #{item.barCode}, #{item.commodityUnit}, #{item.purchaseDecimal}, #{item.commodityDecimal}, #{item.wholesaleDecimal}, #{item.lowDecimal}, #{item.defaultFlag}, #{item.createTime}, #{item.createSerial}, #{item.updateSerial}, #{item.updateTime}, #{item.tenantId}, #{item.deleteFlag})
+        </foreach>
+    </insert>
+</mapper>

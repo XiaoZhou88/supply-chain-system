@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdb.scm.base.mapper.ErpAgentMapper">
+    
+    <resultMap type="ErpAgent" id="ErpAgentResult">
+        <result property="agentId"    column="agent_id"    />
+        <result property="agentType"    column="agent_type"    />
+        <result property="agentName"    column="agent_name"    />
+        <result property="tenantId"    column="tenant_id"    />
+        <result property="deleteFlag"    column="delete_flag"    />
+    </resultMap>
+
+    <sql id="selectErpAgentVo">
+        select agent_id, agent_type, agent_name, tenant_id, delete_flag from erp_agent
+    </sql>
+
+    <select id="selectErpAgentList" parameterType="ErpAgent" resultMap="ErpAgentResult">
+        <include refid="selectErpAgentVo"/>
+        <where>  
+            <if test="agentType != null  and agentType != ''"> and agent_type = #{agentType}</if>
+            <if test="agentName != null  and agentName != ''"> and agent_name like concat('%', #{agentName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectErpAgentById" parameterType="Long" resultMap="ErpAgentResult">
+        <include refid="selectErpAgentVo"/>
+        where agent_id = #{agentId}
+    </select>
+        
+    <insert id="insertErpAgent" parameterType="ErpAgent" useGeneratedKeys="true" keyProperty="agentId">
+        insert into erp_agent
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="agentType != null">agent_type,</if>
+            <if test="agentName != null">agent_name,</if>
+            <if test="tenantId != null">tenant_id,</if>
+            <if test="deleteFlag != null">delete_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="agentType != null">#{agentType},</if>
+            <if test="agentName != null">#{agentName},</if>
+            <if test="tenantId != null">#{tenantId},</if>
+            <if test="deleteFlag != null">#{deleteFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateErpAgent" parameterType="ErpAgent">
+        update erp_agent
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="agentType != null">agent_type = #{agentType},</if>
+            <if test="agentName != null">agent_name = #{agentName},</if>
+            <if test="tenantId != null">tenant_id = #{tenantId},</if>
+            <if test="deleteFlag != null">delete_flag = #{deleteFlag},</if>
+        </trim>
+        where agent_id = #{agentId}
+    </update>
+
+    <delete id="deleteErpAgentById" parameterType="Long">
+        delete from erp_agent where agent_id = #{agentId}
+    </delete>
+
+    <delete id="deleteErpAgentByIds" parameterType="String">
+        delete from erp_agent where agent_id in 
+        <foreach item="agentId" collection="array" open="(" separator="," close=")">
+            #{agentId}
+        </foreach>
+    </delete>
+</mapper>

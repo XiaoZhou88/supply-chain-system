@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdb.scm.material.mapper.ErpMaterialTypeMapper">
+    
+    <resultMap type="ErpMaterialType" id="ErpMaterialTypeResult">
+        <result property="materialTypeId"    column="material_type_id"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="ancestors"    column="ancestors"    />
+        <result property="typeName"    column="type_name"    />
+        <result property="orderNum"    column="order_num"    />
+        <result property="serialNo"    column="serial_no"    />
+        <result property="remark"    column="remark"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="tenantId"    column="tenant_id"    />
+        <result property="deleteFlag"    column="delete_flag"    />
+
+    </resultMap>
+
+
+    <sql id="selectErpMaterialTypeVo">
+        select material_type_id, parent_id, ancestors, type_name, order_num, serial_no, remark, create_time, update_time, tenant_id, delete_flag from erp_material_type
+    </sql>
+
+    <select id="selectErpMaterialTypeList" parameterType="ErpMaterialType" resultMap="ErpMaterialTypeResult">
+        <include refid="selectErpMaterialTypeVo"/>
+        <where>  
+            <if test="typeName != null  and typeName != ''"> and type_name like concat('%', #{typeName}, '%')</if>
+            <if test="serialNo != null  and serialNo != ''"> and serial_no = #{serialNo}</if>
+        </where>
+    </select>
+    
+    <select id="selectErpMaterialTypeById" parameterType="Long" resultMap="ErpMaterialTypeResult">
+        <include refid="selectErpMaterialTypeVo"/>
+        where material_type_id = #{materialTypeId}
+    </select>
+        
+    <insert id="insertErpMaterialType" parameterType="ErpMaterialType" useGeneratedKeys="true" keyProperty="materialTypeId">
+        insert into erp_material_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="parentId != null">parent_id,</if>
+            <if test="ancestors != null">ancestors,</if>
+            <if test="typeName != null">type_name,</if>
+            <if test="orderNum != null">order_num,</if>
+            <if test="serialNo != null">serial_no,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="tenantId != null">tenant_id,</if>
+            <if test="deleteFlag != null">delete_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="parentId != null">#{parentId},</if>
+            <if test="ancestors != null">#{ancestors},</if>
+            <if test="typeName != null">#{typeName},</if>
+            <if test="orderNum != null">#{orderNum},</if>
+            <if test="serialNo != null">#{serialNo},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="tenantId != null">#{tenantId},</if>
+            <if test="deleteFlag != null">#{deleteFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateErpMaterialType" parameterType="ErpMaterialType">
+        update erp_material_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="ancestors != null">ancestors = #{ancestors},</if>
+            <if test="typeName != null">type_name = #{typeName},</if>
+            <if test="orderNum != null">order_num = #{orderNum},</if>
+            <if test="serialNo != null">serial_no = #{serialNo},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="tenantId != null">tenant_id = #{tenantId},</if>
+            <if test="deleteFlag != null">delete_flag = #{deleteFlag},</if>
+        </trim>
+        where material_type_id = #{materialTypeId}
+    </update>
+
+    <delete id="deleteErpMaterialTypeById" parameterType="Long">
+        delete from erp_material_type where material_type_id = #{materialTypeId}
+    </delete>
+
+    <delete id="deleteErpMaterialTypeByIds" parameterType="String">
+        delete from erp_material_type where material_type_id in 
+        <foreach item="materialTypeId" collection="array" open="(" separator="," close=")">
+            #{materialTypeId}
+        </foreach>
+    </delete>
+</mapper>

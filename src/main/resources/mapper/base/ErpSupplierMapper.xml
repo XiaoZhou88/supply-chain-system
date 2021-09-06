@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdb.scm.base.mapper.ErpSupplierMapper">
+    
+    <resultMap type="ErpSupplier" id="ErpSupplierResult">
+        <result property="supplierId"    column="supplier_id"    />
+        <result property="supplierName"    column="supplier_name"    />
+        <result property="contacts"    column="contacts"    />
+        <result property="phoneNum"    column="phone_num"    />
+        <result property="email"    column="email"    />
+        <result property="description"    column="description"    />
+        <result property="isystem"    column="isystem"    />
+        <result property="type"    column="type"    />
+        <result property="enabled"    column="enabled"    />
+        <result property="advanceIn"    column="advance_in"    />
+        <result property="beginNeedGet"    column="begin_need_get"    />
+        <result property="beginNeedPay"    column="begin_need_pay"    />
+        <result property="allNeedGet"    column="all_need_get"    />
+        <result property="allNeedPay"    column="all_need_pay"    />
+        <result property="fax"    column="fax"    />
+        <result property="telephone"    column="telephone"    />
+        <result property="address"    column="address"    />
+        <result property="taxNum"    column="tax_num"    />
+        <result property="bankName"    column="bank_name"    />
+        <result property="accountNumber"    column="account_number"    />
+        <result property="taxRate"    column="tax_rate"    />
+        <result property="tenantId"    column="tenant_id"    />
+        <result property="deleteFlag"    column="delete_flag"    />
+    </resultMap>
+
+    <sql id="selectErpSupplierVo">
+        select supplier_id, supplier_name, contacts, phone_num, email, description, isystem, type, enabled, advance_in, begin_need_get, begin_need_pay, all_need_get, all_need_pay, fax, telephone, address, tax_num, bank_name, account_number, tax_rate, tenant_id, delete_flag from erp_supplier
+    </sql>
+
+    <select id="selectErpSupplierList" parameterType="ErpSupplier" resultMap="ErpSupplierResult">
+        <include refid="selectErpSupplierVo"/>
+        <where>  
+            <if test="supplierName != null  and supplierName != ''"> and supplier_name like concat('%', #{supplierName}, '%')</if>
+            <if test="contacts != null  and contacts != ''"> and contacts = #{contacts}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+        </where>
+    </select>
+    
+    <select id="selectErpSupplierById" parameterType="Long" resultMap="ErpSupplierResult">
+        <include refid="selectErpSupplierVo"/>
+        where supplier_id = #{supplierId}
+    </select>
+        
+    <insert id="insertErpSupplier" parameterType="ErpSupplier" useGeneratedKeys="true" keyProperty="supplierId">
+        insert into erp_supplier
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="supplierName != null and supplierName != ''">supplier_name,</if>
+            <if test="contacts != null">contacts,</if>
+            <if test="phoneNum != null">phone_num,</if>
+            <if test="email != null">email,</if>
+            <if test="description != null">description,</if>
+            <if test="isystem != null">isystem,</if>
+            <if test="type != null">type,</if>
+            <if test="enabled != null">enabled,</if>
+            <if test="advanceIn != null">advance_in,</if>
+            <if test="beginNeedGet != null">begin_need_get,</if>
+            <if test="beginNeedPay != null">begin_need_pay,</if>
+            <if test="allNeedGet != null">all_need_get,</if>
+            <if test="allNeedPay != null">all_need_pay,</if>
+            <if test="fax != null">fax,</if>
+            <if test="telephone != null">telephone,</if>
+            <if test="address != null">address,</if>
+            <if test="taxNum != null">tax_num,</if>
+            <if test="bankName != null">bank_name,</if>
+            <if test="accountNumber != null">account_number,</if>
+            <if test="taxRate != null">tax_rate,</if>
+            <if test="tenantId != null">tenant_id,</if>
+            <if test="deleteFlag != null">delete_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="supplierName != null and supplierName != ''">#{supplierName},</if>
+            <if test="contacts != null">#{contacts},</if>
+            <if test="phoneNum != null">#{phoneNum},</if>
+            <if test="email != null">#{email},</if>
+            <if test="description != null">#{description},</if>
+            <if test="isystem != null">#{isystem},</if>
+            <if test="type != null">#{type},</if>
+            <if test="enabled != null">#{enabled},</if>
+            <if test="advanceIn != null">#{advanceIn},</if>
+            <if test="beginNeedGet != null">#{beginNeedGet},</if>
+            <if test="beginNeedPay != null">#{beginNeedPay},</if>
+            <if test="allNeedGet != null">#{allNeedGet},</if>
+            <if test="allNeedPay != null">#{allNeedPay},</if>
+            <if test="fax != null">#{fax},</if>
+            <if test="telephone != null">#{telephone},</if>
+            <if test="address != null">#{address},</if>
+            <if test="taxNum != null">#{taxNum},</if>
+            <if test="bankName != null">#{bankName},</if>
+            <if test="accountNumber != null">#{accountNumber},</if>
+            <if test="taxRate != null">#{taxRate},</if>
+            <if test="tenantId != null">#{tenantId},</if>
+            <if test="deleteFlag != null">#{deleteFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateErpSupplier" parameterType="ErpSupplier">
+        update erp_supplier
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="supplierName != null and supplierName != ''">supplier_name = #{supplierName},</if>
+            <if test="contacts != null">contacts = #{contacts},</if>
+            <if test="phoneNum != null">phone_num = #{phoneNum},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="isystem != null">isystem = #{isystem},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="enabled != null">enabled = #{enabled},</if>
+            <if test="advanceIn != null">advance_in = #{advanceIn},</if>
+            <if test="beginNeedGet != null">begin_need_get = #{beginNeedGet},</if>
+            <if test="beginNeedPay != null">begin_need_pay = #{beginNeedPay},</if>
+            <if test="allNeedGet != null">all_need_get = #{allNeedGet},</if>
+            <if test="allNeedPay != null">all_need_pay = #{allNeedPay},</if>
+            <if test="fax != null">fax = #{fax},</if>
+            <if test="telephone != null">telephone = #{telephone},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="taxNum != null">tax_num = #{taxNum},</if>
+            <if test="bankName != null">bank_name = #{bankName},</if>
+            <if test="accountNumber != null">account_number = #{accountNumber},</if>
+            <if test="taxRate != null">tax_rate = #{taxRate},</if>
+            <if test="tenantId != null">tenant_id = #{tenantId},</if>
+            <if test="deleteFlag != null">delete_flag = #{deleteFlag},</if>
+        </trim>
+        where supplier_id = #{supplierId}
+    </update>
+
+    <delete id="deleteErpSupplierById" parameterType="Long">
+        delete from erp_supplier where supplier_id = #{supplierId}
+    </delete>
+
+    <delete id="deleteErpSupplierByIds" parameterType="String">
+        delete from erp_supplier where supplier_id in 
+        <foreach item="supplierId" collection="array" open="(" separator="," close=")">
+            #{supplierId}
+        </foreach>
+    </delete>
+</mapper>

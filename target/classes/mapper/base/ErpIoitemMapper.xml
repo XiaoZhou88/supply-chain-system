@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdb.scm.base.mapper.ErpIoitemMapper">
+    
+    <resultMap type="ErpIoitem" id="ErpIoitemResult">
+        <result property="ioitemId"    column="ioitem_id"    />
+        <result property="ioitemName"    column="ioitem_name"    />
+        <result property="type"    column="type"    />
+        <result property="remark"    column="remark"    />
+        <result property="tenantId"    column="tenant_id"    />
+        <result property="deleteFlag"    column="delete_flag"    />
+    </resultMap>
+
+    <sql id="selectErpIoitemVo">
+        select ioitem_id, ioitem_name, type, remark, tenant_id, delete_flag from erp_ioitem
+    </sql>
+
+    <select id="selectErpIoitemList" parameterType="ErpIoitem" resultMap="ErpIoitemResult">
+        <include refid="selectErpIoitemVo"/>
+        <where>  
+            <if test="ioitemName != null  and ioitemName != ''"> and ioitem_name like concat('%', #{ioitemName}, '%')</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+        </where>
+    </select>
+    
+    <select id="selectErpIoitemById" parameterType="Long" resultMap="ErpIoitemResult">
+        <include refid="selectErpIoitemVo"/>
+        where ioitem_id = #{ioitemId}
+    </select>
+        
+    <insert id="insertErpIoitem" parameterType="ErpIoitem" useGeneratedKeys="true" keyProperty="ioitemId">
+        insert into erp_ioitem
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="ioitemName != null">ioitem_name,</if>
+            <if test="type != null">type,</if>
+            <if test="remark != null">remark,</if>
+            <if test="tenantId != null">tenant_id,</if>
+            <if test="deleteFlag != null">delete_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="ioitemName != null">#{ioitemName},</if>
+            <if test="type != null">#{type},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="tenantId != null">#{tenantId},</if>
+            <if test="deleteFlag != null">#{deleteFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateErpIoitem" parameterType="ErpIoitem">
+        update erp_ioitem
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="ioitemName != null">ioitem_name = #{ioitemName},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="tenantId != null">tenant_id = #{tenantId},</if>
+            <if test="deleteFlag != null">delete_flag = #{deleteFlag},</if>
+        </trim>
+        where ioitem_id = #{ioitemId}
+    </update>
+
+    <delete id="deleteErpIoitemById" parameterType="Long">
+        delete from erp_ioitem where ioitem_id = #{ioitemId}
+    </delete>
+
+    <delete id="deleteErpIoitemByIds" parameterType="String">
+        delete from erp_ioitem where ioitem_id in 
+        <foreach item="ioitemId" collection="array" open="(" separator="," close=")">
+            #{ioitemId}
+        </foreach>
+    </delete>
+</mapper>

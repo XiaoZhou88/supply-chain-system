@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdb.scm.financial.mapper.ErpAccountHeadMapper">
+    
+    <resultMap type="ErpAccountHead" id="ErpAccountHeadResult">
+        <result property="accountHeadId"    column="account_head_id"    />
+        <result property="type"    column="type"    />
+        <result property="organId"    column="organ_id"    />
+        <result property="agentId"    column="agent_id"    />
+        <result property="creator"    column="creator"    />
+        <result property="changeAmount"    column="change_amount"    />
+        <result property="totalPrice"    column="total_price"    />
+        <result property="accountId"    column="account_id"    />
+        <result property="billNo"    column="bill_no"    />
+        <result property="billTime"    column="bill_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="fileName"    column="file_name"    />
+        <result property="tenantId"    column="tenant_id"    />
+        <result property="deleteFlag"    column="delete_flag"    />
+    </resultMap>
+
+    <resultMap id="ErpAccountHeadErpAccountItemResult" type="ErpAccountHead" extends="ErpAccountHeadResult">
+        <collection property="erpAccountItemList" notNullColumn="sub_account_item_id" javaType="java.util.List" resultMap="ErpAccountItemResult" />
+    </resultMap>
+
+    <resultMap type="ErpAccountItem" id="ErpAccountItemResult">
+        <result property="accountItemId"    column="sub_account_item_id"    />
+        <result property="headerId"    column="sub_header_id"    />
+        <result property="accountId"    column="sub_account_id"    />
+        <result property="inOutItemId"    column="sub_in_out_item_id"    />
+        <result property="billId"    column="sub_bill_id"    />
+        <result property="needDebt"    column="sub_need_debt"    />
+        <result property="finishDebt"    column="sub_finish_debt"    />
+        <result property="eachAmount"    column="sub_each_amount"    />
+        <result property="remark"    column="sub_remark"    />
+        <result property="tenantId"    column="sub_tenant_id"    />
+        <result property="deleteFlag"    column="sub_delete_flag"    />
+    </resultMap>
+
+    <sql id="selectErpAccountHeadVo">
+        select account_head_id, type, organ_id, agent_id, creator, change_amount, total_price, account_id, bill_no, bill_time, remark, file_name, tenant_id, delete_flag from erp_account_head
+    </sql>
+
+    <select id="selectErpAccountHeadList" parameterType="ErpAccountHead" resultMap="ErpAccountHeadResult">
+        <include refid="selectErpAccountHeadVo"/>
+        <where>  
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="organId != null "> and organ_id = #{organId}</if>
+            <if test="agentId != null "> and agent_id = #{agentId}</if>
+            <if test="creator != null "> and creator = #{creator}</if>
+        </where>
+    </select>
+    
+    <select id="selectErpAccountHeadById" parameterType="Long" resultMap="ErpAccountHeadErpAccountItemResult">
+        select a.account_head_id, a.type, a.organ_id, a.agent_id, a.creator, a.change_amount, a.total_price, a.account_id, a.bill_no, a.bill_time, a.remark, a.file_name, a.tenant_id, a.delete_flag,
+            b.account_item_id as sub_account_item_id, b.header_id as sub_header_id, b.account_id as sub_account_id, b.in_out_item_id as sub_in_out_item_id, b.bill_id as sub_bill_id, b.need_debt as sub_need_debt, b.finish_debt as sub_finish_debt, b.each_amount as sub_each_amount, b.remark as sub_remark, b.tenant_id as sub_tenant_id, b.delete_flag as sub_delete_flag
+        from erp_account_head a
+        left join erp_account_item b on b.header_id = a.account_head_id
+        where a.account_head_id = #{accountHeadId}
+    </select>
+        
+    <insert id="insertErpAccountHead" parameterType="ErpAccountHead" useGeneratedKeys="true" keyProperty="accountHeadId">
+        insert into erp_account_head
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="type != null">type,</if>
+            <if test="organId != null">organ_id,</if>
+            <if test="agentId != null">agent_id,</if>
+            <if test="creator != null">creator,</if>
+            <if test="changeAmount != null">change_amount,</if>
+            <if test="totalPrice != null">total_price,</if>
+            <if test="accountId != null">account_id,</if>
+            <if test="billNo != null">bill_no,</if>
+            <if test="billTime != null">bill_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="fileName != null">file_name,</if>
+            <if test="tenantId != null">tenant_id,</if>
+            <if test="deleteFlag != null">delete_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="type != null">#{type},</if>
+            <if test="organId != null">#{organId},</if>
+            <if test="agentId != null">#{agentId},</if>
+            <if test="creator != null">#{creator},</if>
+            <if test="changeAmount != null">#{changeAmount},</if>
+            <if test="totalPrice != null">#{totalPrice},</if>
+            <if test="accountId != null">#{accountId},</if>
+            <if test="billNo != null">#{billNo},</if>
+            <if test="billTime != null">#{billTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="fileName != null">#{fileName},</if>
+            <if test="tenantId != null">#{tenantId},</if>
+            <if test="deleteFlag != null">#{deleteFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateErpAccountHead" parameterType="ErpAccountHead">
+        update erp_account_head
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="type != null">type = #{type},</if>
+            <if test="organId != null">organ_id = #{organId},</if>
+            <if test="agentId != null">agent_id = #{agentId},</if>
+            <if test="creator != null">creator = #{creator},</if>
+            <if test="changeAmount != null">change_amount = #{changeAmount},</if>
+            <if test="totalPrice != null">total_price = #{totalPrice},</if>
+            <if test="accountId != null">account_id = #{accountId},</if>
+            <if test="billNo != null">bill_no = #{billNo},</if>
+            <if test="billTime != null">bill_time = #{billTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="fileName != null">file_name = #{fileName},</if>
+            <if test="tenantId != null">tenant_id = #{tenantId},</if>
+            <if test="deleteFlag != null">delete_flag = #{deleteFlag},</if>
+        </trim>
+        where account_head_id = #{accountHeadId}
+    </update>
+
+    <delete id="deleteErpAccountHeadById" parameterType="Long">
+        delete from erp_account_head where account_head_id = #{accountHeadId}
+    </delete>
+
+    <delete id="deleteErpAccountHeadByIds" parameterType="String">
+        delete from erp_account_head where account_head_id in 
+        <foreach item="accountHeadId" collection="array" open="(" separator="," close=")">
+            #{accountHeadId}
+        </foreach>
+    </delete>
+    
+    <delete id="deleteErpAccountItemByHeaderIds" parameterType="String">
+        delete from erp_account_item where header_id in 
+        <foreach item="headerId" collection="array" open="(" separator="," close=")">
+            #{headerId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteErpAccountItemByHeaderId" parameterType="Long">
+        delete from erp_account_item where header_id = #{headerId}
+    </delete>
+
+    <insert id="batchErpAccountItem">
+        insert into erp_account_item( account_item_id, header_id, account_id, in_out_item_id, bill_id, need_debt, finish_debt, each_amount, remark, tenant_id, delete_flag) values
+		<foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.accountItemId}, #{item.headerId}, #{item.accountId}, #{item.inOutItemId}, #{item.billId}, #{item.needDebt}, #{item.finishDebt}, #{item.eachAmount}, #{item.remark}, #{item.tenantId}, #{item.deleteFlag})
+        </foreach>
+    </insert>
+</mapper>

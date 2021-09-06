@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdb.scm.material.mapper.ErpUnitMapper">
+    
+    <resultMap type="ErpUnit" id="ErpUnitResult">
+        <result property="unitId"    column="unit_id"    />
+        <result property="unitName"    column="unit_name"    />
+        <result property="basicUnit"    column="basic_unit"    />
+        <result property="otherUnit"    column="other_unit"    />
+        <result property="ratio"    column="ratio"    />
+        <result property="tenantId"    column="tenant_id"    />
+        <result property="deleteFlag"    column="delete_flag"    />
+    </resultMap>
+
+    <sql id="selectErpUnitVo">
+        select unit_id, unit_name, basic_unit, other_unit, ratio, tenant_id, delete_flag from erp_unit
+    </sql>
+
+    <select id="selectErpUnitList" parameterType="ErpUnit" resultMap="ErpUnitResult">
+        <include refid="selectErpUnitVo"/>
+        <where>  
+            <if test="unitName != null  and unitName != ''"> and unit_name like concat('%', #{unitName}, '%')</if>
+            <if test="basicUnit != null  and basicUnit != ''"> and basic_unit = #{basicUnit}</if>
+            <if test="otherUnit != null  and otherUnit != ''"> and other_unit = #{otherUnit}</if>
+        </where>
+    </select>
+    
+    <select id="selectErpUnitById" parameterType="Long" resultMap="ErpUnitResult">
+        <include refid="selectErpUnitVo"/>
+        where unit_id = #{unitId}
+    </select>
+        
+    <insert id="insertErpUnit" parameterType="ErpUnit" useGeneratedKeys="true" keyProperty="unitId">
+        insert into erp_unit
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="unitName != null">unit_name,</if>
+            <if test="basicUnit != null">basic_unit,</if>
+            <if test="otherUnit != null">other_unit,</if>
+            <if test="ratio != null">ratio,</if>
+            <if test="tenantId != null">tenant_id,</if>
+            <if test="deleteFlag != null">delete_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="unitName != null">#{unitName},</if>
+            <if test="basicUnit != null">#{basicUnit},</if>
+            <if test="otherUnit != null">#{otherUnit},</if>
+            <if test="ratio != null">#{ratio},</if>
+            <if test="tenantId != null">#{tenantId},</if>
+            <if test="deleteFlag != null">#{deleteFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateErpUnit" parameterType="ErpUnit">
+        update erp_unit
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="unitName != null">unit_name = #{unitName},</if>
+            <if test="basicUnit != null">basic_unit = #{basicUnit},</if>
+            <if test="otherUnit != null">other_unit = #{otherUnit},</if>
+            <if test="ratio != null">ratio = #{ratio},</if>
+            <if test="tenantId != null">tenant_id = #{tenantId},</if>
+            <if test="deleteFlag != null">delete_flag = #{deleteFlag},</if>
+        </trim>
+        where unit_id = #{unitId}
+    </update>
+
+    <delete id="deleteErpUnitById" parameterType="Long">
+        delete from erp_unit where unit_id = #{unitId}
+    </delete>
+
+    <delete id="deleteErpUnitByIds" parameterType="String">
+        delete from erp_unit where unit_id in 
+        <foreach item="unitId" collection="array" open="(" separator="," close=")">
+            #{unitId}
+        </foreach>
+    </delete>
+</mapper>

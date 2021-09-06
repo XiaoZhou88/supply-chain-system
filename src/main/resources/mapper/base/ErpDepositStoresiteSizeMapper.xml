@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdb.scm.base.mapper.ErpDepositStoresiteSizeMapper">
+    
+    <resultMap type="ErpDepositStoresiteSize" id="ErpDepositStoresiteSizeResult">
+        <result property="storesizeId"    column="storesize_id"    />
+        <result property="storesizeName"    column="storesize_name"    />
+        <result property="length"    column="length"    />
+        <result property="width"    column="width"    />
+        <result property="height"    column="height"    />
+        <result property="maxWeight"    column="max_weight"    />
+        <result property="maxTray"    column="max_tray"    />
+        <result property="maxVolume"    column="max_volume"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="tenantId"    column="tenant_id"    />
+    </resultMap>
+
+    <sql id="selectErpDepositStoresiteSizeVo">
+        select storesize_id, storesize_name, length, width, height, max_weight, max_tray, max_volume, del_flag, create_by, create_time, update_by, update_time, remark, tenant_id from erp_deposit_storesite_size
+    </sql>
+
+    <select id="selectErpDepositStoresiteSizeList" parameterType="ErpDepositStoresiteSize" resultMap="ErpDepositStoresiteSizeResult">
+        <include refid="selectErpDepositStoresiteSizeVo"/>
+        <where>  
+            <if test="storesizeName != null  and storesizeName != ''"> and storesize_name like concat('%', #{storesizeName}, '%')</if>
+            <if test="length != null "> and length = #{length}</if>
+            <if test="width != null "> and width = #{width}</if>
+            <if test="height != null "> and height = #{height}</if>
+            <if test="maxWeight != null "> and max_weight = #{maxWeight}</if>
+            <if test="maxTray != null "> and max_tray = #{maxTray}</if>
+            <if test="maxVolume != null "> and max_volume = #{maxVolume}</if>
+        </where>
+    </select>
+    
+    <select id="selectErpDepositStoresiteSizeById" parameterType="Long" resultMap="ErpDepositStoresiteSizeResult">
+        <include refid="selectErpDepositStoresiteSizeVo"/>
+        where storesize_id = #{storesizeId}
+    </select>
+        
+    <insert id="insertErpDepositStoresiteSize" parameterType="ErpDepositStoresiteSize" useGeneratedKeys="true" keyProperty="storesizeId">
+        insert into erp_deposit_storesite_size
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="storesizeName != null">storesize_name,</if>
+            <if test="length != null">length,</if>
+            <if test="width != null">width,</if>
+            <if test="height != null">height,</if>
+            <if test="maxWeight != null">max_weight,</if>
+            <if test="maxTray != null">max_tray,</if>
+            <if test="maxVolume != null">max_volume,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="tenantId != null">tenant_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="storesizeName != null">#{storesizeName},</if>
+            <if test="length != null">#{length},</if>
+            <if test="width != null">#{width},</if>
+            <if test="height != null">#{height},</if>
+            <if test="maxWeight != null">#{maxWeight},</if>
+            <if test="maxTray != null">#{maxTray},</if>
+            <if test="maxVolume != null">#{maxVolume},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="tenantId != null">#{tenantId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateErpDepositStoresiteSize" parameterType="ErpDepositStoresiteSize">
+        update erp_deposit_storesite_size
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="storesizeName != null">storesize_name = #{storesizeName},</if>
+            <if test="length != null">length = #{length},</if>
+            <if test="width != null">width = #{width},</if>
+            <if test="height != null">height = #{height},</if>
+            <if test="maxWeight != null">max_weight = #{maxWeight},</if>
+            <if test="maxTray != null">max_tray = #{maxTray},</if>
+            <if test="maxVolume != null">max_volume = #{maxVolume},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="tenantId != null">tenant_id = #{tenantId},</if>
+        </trim>
+        where storesize_id = #{storesizeId}
+    </update>
+
+    <delete id="deleteErpDepositStoresiteSizeById" parameterType="Long">
+        delete from erp_deposit_storesite_size where storesize_id = #{storesizeId}
+    </delete>
+
+    <delete id="deleteErpDepositStoresiteSizeByIds" parameterType="String">
+        delete from erp_deposit_storesite_size where storesize_id in 
+        <foreach item="storesizeId" collection="array" open="(" separator="," close=")">
+            #{storesizeId}
+        </foreach>
+    </delete>
+</mapper>

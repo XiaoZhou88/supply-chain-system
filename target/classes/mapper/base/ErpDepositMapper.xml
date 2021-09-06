@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdb.scm.base.mapper.ErpDepositMapper">
+    
+    <resultMap type="ErpDeposit" id="ErpDepositResult">
+        <result property="depositId"    column="deposit_id"    />
+        <result property="depositName"    column="deposit_name"    />
+        <result property="address"    column="address"    />
+        <result property="warehousing"    column="warehousing"    />
+        <result property="truckage"    column="truckage"    />
+        <result property="type"    column="type"    />
+        <result property="sort"    column="sort"    />
+        <result property="remark"    column="remark"    />
+        <result property="principal"    column="principal"    />
+        <result property="tenantId"    column="tenant_id"    />
+        <result property="deleteFlag"    column="delete_Flag"    />
+        <result property="isDefault"    column="is_default"    />
+        <association property="user" javaType="SysUser" resultMap="userResultInfo"/>
+    </resultMap>
+    <resultMap id="userResultInfo" type="SysUser">
+        <id     property="userId"       column="user_id"      />
+        <result property="deptId"       column="dept_id"      />
+        <result property="userName"     column="user_name"    />
+    </resultMap>
+
+    <sql id="selectErpDepositVo">
+        select d.deposit_id, d.deposit_name, d.address, d.warehousing, d.truckage, d.type, d.sort, d.remark, d.principal,
+               d.tenant_id, d.delete_Flag, d.is_default ,u.user_name
+            from erp_deposit d
+                left join sys_user u on d.principal = u.user_id
+    </sql>
+
+    <select id="selectErpDepositList" parameterType="ErpDeposit" resultMap="ErpDepositResult">
+        <include refid="selectErpDepositVo"/>
+        <where>  
+            <if test="depositName != null  and depositName != ''"> and deposit_name like concat('%', #{depositName}, '%')</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="principal != null "> and principal = #{principal}</if>
+        </where>
+    </select>
+    
+    <select id="selectErpDepositById" parameterType="Long" resultMap="ErpDepositResult">
+        <include refid="selectErpDepositVo"/>
+        where deposit_id = #{depositId}
+    </select>
+        
+    <insert id="insertErpDeposit" parameterType="ErpDeposit" useGeneratedKeys="true" keyProperty="depositId">
+        insert into erp_deposit
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="depositName != null">deposit_name,</if>
+            <if test="address != null">address,</if>
+            <if test="warehousing != null">warehousing,</if>
+            <if test="truckage != null">truckage,</if>
+            <if test="type != null">type,</if>
+            <if test="sort != null">sort,</if>
+            <if test="remark != null">remark,</if>
+            <if test="principal != null">principal,</if>
+            <if test="tenantId != null">tenant_id,</if>
+            <if test="deleteFlag != null">delete_Flag,</if>
+            <if test="isDefault != null">is_default,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="depositName != null">#{depositName},</if>
+            <if test="address != null">#{address},</if>
+            <if test="warehousing != null">#{warehousing},</if>
+            <if test="truckage != null">#{truckage},</if>
+            <if test="type != null">#{type},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="principal != null">#{principal},</if>
+            <if test="tenantId != null">#{tenantId},</if>
+            <if test="deleteFlag != null">#{deleteFlag},</if>
+            <if test="isDefault != null">#{isDefault},</if>
+         </trim>
+    </insert>
+
+    <update id="updateErpDeposit" parameterType="ErpDeposit">
+        update erp_deposit
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="depositName != null">deposit_name = #{depositName},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="warehousing != null">warehousing = #{warehousing},</if>
+            <if test="truckage != null">truckage = #{truckage},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="principal != null">principal = #{principal},</if>
+            <if test="tenantId != null">tenant_id = #{tenantId},</if>
+            <if test="deleteFlag != null">delete_Flag = #{deleteFlag},</if>
+            <if test="isDefault != null">is_default = #{isDefault},</if>
+        </trim>
+        where deposit_id = #{depositId}
+    </update>
+
+    <delete id="deleteErpDepositById" parameterType="Long">
+        delete from erp_deposit where deposit_id = #{depositId}
+    </delete>
+
+    <delete id="deleteErpDepositByIds" parameterType="String">
+        delete from erp_deposit where deposit_id in 
+        <foreach item="depositId" collection="array" open="(" separator="," close=")">
+            #{depositId}
+        </foreach>
+    </delete>
+</mapper>

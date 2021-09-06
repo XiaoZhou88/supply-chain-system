@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdb.scm.base.mapper.ErpBillNoMapper">
+    
+    <resultMap type="ErpBillNo" id="ErpBillNoResult">
+        <result property="seqName"    column="seq_name"    />
+        <result property="minValue"    column="min_value"    />
+        <result property="maxValue"    column="max_value"    />
+        <result property="currentVal"    column="current_val"    />
+        <result property="incrementVal"    column="increment_val"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectErpBillNoVo">
+        select seq_name, min_value, max_value, current_val, increment_val, remark from erp_bill_no
+    </sql>
+
+    <select id="selectErpBillNoList" parameterType="ErpBillNo" resultMap="ErpBillNoResult">
+        <include refid="selectErpBillNoVo"/>
+        <where>  
+        </where>
+    </select>
+    
+    <select id="selectErpBillNoById" parameterType="String" resultMap="ErpBillNoResult">
+        <include refid="selectErpBillNoVo"/>
+        where seq_name = #{seqName}
+    </select>
+        
+    <insert id="insertErpBillNo" parameterType="ErpBillNo">
+        insert into erp_bill_no
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="seqName != null">seq_name,</if>
+            <if test="minValue != null">min_value,</if>
+            <if test="maxValue != null">max_value,</if>
+            <if test="currentVal != null">current_val,</if>
+            <if test="incrementVal != null">increment_val,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="seqName != null">#{seqName},</if>
+            <if test="minValue != null">#{minValue},</if>
+            <if test="maxValue != null">#{maxValue},</if>
+            <if test="currentVal != null">#{currentVal},</if>
+            <if test="incrementVal != null">#{incrementVal},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateErpBillNo" parameterType="ErpBillNo">
+        update erp_bill_no
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="minValue != null">min_value = #{minValue},</if>
+            <if test="maxValue != null">max_value = #{maxValue},</if>
+            <if test="currentVal != null">current_val = #{currentVal},</if>
+            <if test="incrementVal != null">increment_val = #{incrementVal},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where seq_name = #{seqName}
+    </update>
+
+    <delete id="deleteErpBillNoById" parameterType="String">
+        delete from erp_bill_no where seq_name = #{seqName}
+    </delete>
+
+    <delete id="deleteErpBillNoByIds" parameterType="String">
+        delete from erp_bill_no where seq_name in 
+        <foreach item="seqName" collection="array" open="(" separator="," close=")">
+            #{seqName}
+        </foreach>
+    </delete>
+</mapper>

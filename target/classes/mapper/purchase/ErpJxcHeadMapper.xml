@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdb.scm.purchase.mapper.ErpJxcHeadMapper">
+    
+    <resultMap type="ErpJxcHead" id="ErpJxcHeadResult">
+        <result property="jxcHeadId"    column="jxc_head_id"    />
+        <result property="type"    column="type"    />
+        <result property="subType"    column="sub_type"    />
+        <result property="defaultNumber"    column="default_number"    />
+        <result property="number"    column="number"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="operTime"    column="oper_time"    />
+        <result property="organId"    column="organ_id"    />
+        <result property="agentId"    column="agent_id"    />
+        <result property="creator"    column="creator"    />
+        <result property="accountId"    column="account_id"    />
+        <result property="changeAmount"    column="change_amount"    />
+        <result property="totalPrice"    column="total_price"    />
+        <result property="payType"    column="pay_type"    />
+        <result property="billType"    column="bill_type"    />
+        <result property="remark"    column="remark"    />
+        <result property="fileName"    column="file_name"    />
+        <result property="salesMan"    column="sales_man"    />
+        <result property="accountIdList"    column="account_id_list"    />
+        <result property="accountMoneyList"    column="account_money_list"    />
+        <result property="discount"    column="discount"    />
+        <result property="discountMoney"    column="discount_money"    />
+        <result property="discountLastMoney"    column="discount_last_money"    />
+        <result property="otherMoney"    column="other_money"    />
+        <result property="otherMoneyList"    column="other_money_list"    />
+        <result property="otherMoneyItem"    column="other_money_item"    />
+        <result property="accountDay"    column="account_day"    />
+        <result property="status"    column="status"    />
+        <result property="linkNumber"    column="link_number"    />
+        <result property="tenantId"    column="tenant_id"    />
+        <result property="deleteFlag"    column="delete_flag"    />
+    </resultMap>
+
+    <resultMap id="ErpJxcHeadErpJxcItemResult" type="ErpJxcHead" extends="ErpJxcHeadResult">
+        <collection property="erpJxcItemList" notNullColumn="sub_jxc_item_id" javaType="java.util.List" resultMap="ErpJxcItemResult" />
+    </resultMap>
+
+    <resultMap type="ErpJxcItem" id="ErpJxcItemResult">
+        <result property="jxcItemId"    column="sub_jxc_item_id"    />
+        <result property="headerId"    column="sub_header_id"    />
+        <result property="materialId"    column="sub_material_id"    />
+        <result property="materialExtendId"    column="sub_material_extend_id"    />
+        <result property="materialUnit"    column="sub_material_unit"    />
+        <result property="operNumber"    column="sub_oper_number"    />
+        <result property="basicNumber"    column="sub_basic_number"    />
+        <result property="unitPrice"    column="sub_unit_price"    />
+        <result property="taxUnitPrice"    column="sub_tax_unit_price"    />
+        <result property="allPrice"    column="sub_all_price"    />
+        <result property="remark"    column="sub_remark"    />
+        <result property="img"    column="sub_img"    />
+        <result property="incidentals"    column="sub_incidentals"    />
+        <result property="depotId"    column="sub_depot_id"    />
+        <result property="anotherDepotId"    column="sub_another_depot_id"    />
+        <result property="taxRate"    column="sub_tax_rate"    />
+        <result property="taxMoney"    column="sub_tax_money"    />
+        <result property="taxLastMoney"    column="sub_tax_last_money"    />
+        <result property="otherField1"    column="sub_other_field1"    />
+        <result property="otherField2"    column="sub_other_field2"    />
+        <result property="otherField3"    column="sub_other_field3"    />
+        <result property="otherField4"    column="sub_other_field4"    />
+        <result property="otherField5"    column="sub_other_field5"    />
+        <result property="materialType"    column="sub_material_type"    />
+        <result property="tenantId"    column="sub_tenant_id"    />
+        <result property="deleteFlag"    column="sub_delete_flag"    />
+    </resultMap>
+
+    <sql id="selectErpJxcHeadVo">
+        select jxc_head_id, type, sub_type, default_number, number, create_time, oper_time, organ_id, agent_id, creator, account_id, change_amount, total_price, pay_type, bill_type, remark, file_name, sales_man, account_id_list, account_money_list, discount, discount_money, discount_last_money, other_money, other_money_list, other_money_item, account_day, status, link_number, tenant_id, delete_flag from erp_jxc_head
+    </sql>
+
+    <select id="selectErpJxcHeadList" parameterType="ErpJxcHead" resultMap="ErpJxcHeadResult">
+        <include refid="selectErpJxcHeadVo"/>
+        <where>  
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="subType != null  and subType != ''"> and sub_type = #{subType}</if>
+            <if test="organId != null "> and organ_id = #{organId}</if>
+            <if test="agentId != null "> and agent_id = #{agentId}</if>
+        </where>
+    </select>
+    
+    <select id="selectErpJxcHeadById" parameterType="Long" resultMap="ErpJxcHeadErpJxcItemResult">
+        select a.jxc_head_id, a.type, a.sub_type, a.default_number, a.number, a.create_time, a.oper_time, a.organ_id, a.agent_id, a.creator, a.account_id, a.change_amount, a.total_price, a.pay_type, a.bill_type, a.remark, a.file_name, a.sales_man, a.account_id_list, a.account_money_list, a.discount, a.discount_money, a.discount_last_money, a.other_money, a.other_money_list, a.other_money_item, a.account_day, a.status, a.link_number, a.tenant_id, a.delete_flag,
+            b.jxc_item_id as sub_jxc_item_id, b.header_id as sub_header_id, b.material_id as sub_material_id, b.material_extend_id as sub_material_extend_id, b.material_unit as sub_material_unit, b.oper_number as sub_oper_number, b.basic_number as sub_basic_number, b.unit_price as sub_unit_price, b.tax_unit_price as sub_tax_unit_price, b.all_price as sub_all_price, b.remark as sub_remark, b.img as sub_img, b.incidentals as sub_incidentals, b.depot_id as sub_depot_id, b.another_depot_id as sub_another_depot_id, b.tax_rate as sub_tax_rate, b.tax_money as sub_tax_money, b.tax_last_money as sub_tax_last_money, b.other_field1 as sub_other_field1, b.other_field2 as sub_other_field2, b.other_field3 as sub_other_field3, b.other_field4 as sub_other_field4, b.other_field5 as sub_other_field5, b.material_type as sub_material_type, b.tenant_id as sub_tenant_id, b.delete_flag as sub_delete_flag
+        from erp_jxc_head a
+        left join erp_jxc_item b on b.header_id = a.jxc_head_id
+        where a.jxc_head_id = #{jxcHeadId}
+    </select>
+        
+    <insert id="insertErpJxcHead" parameterType="ErpJxcHead" useGeneratedKeys="true" keyProperty="jxcHeadId">
+        insert into erp_jxc_head
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="type != null">type,</if>
+            <if test="subType != null">sub_type,</if>
+            <if test="defaultNumber != null">default_number,</if>
+            <if test="number != null">number,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="operTime != null">oper_time,</if>
+            <if test="organId != null">organ_id,</if>
+            <if test="agentId != null">agent_id,</if>
+            <if test="creator != null">creator,</if>
+            <if test="accountId != null">account_id,</if>
+            <if test="changeAmount != null">change_amount,</if>
+            <if test="totalPrice != null">total_price,</if>
+            <if test="payType != null">pay_type,</if>
+            <if test="billType != null">bill_type,</if>
+            <if test="remark != null">remark,</if>
+            <if test="fileName != null">file_name,</if>
+            <if test="salesMan != null">sales_man,</if>
+            <if test="accountIdList != null">account_id_list,</if>
+            <if test="accountMoneyList != null">account_money_list,</if>
+            <if test="discount != null">discount,</if>
+            <if test="discountMoney != null">discount_money,</if>
+            <if test="discountLastMoney != null">discount_last_money,</if>
+            <if test="otherMoney != null">other_money,</if>
+            <if test="otherMoneyList != null">other_money_list,</if>
+            <if test="otherMoneyItem != null">other_money_item,</if>
+            <if test="accountDay != null">account_day,</if>
+            <if test="status != null">status,</if>
+            <if test="linkNumber != null">link_number,</if>
+            <if test="tenantId != null">tenant_id,</if>
+            <if test="deleteFlag != null">delete_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="type != null">#{type},</if>
+            <if test="subType != null">#{subType},</if>
+            <if test="defaultNumber != null">#{defaultNumber},</if>
+            <if test="number != null">#{number},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="operTime != null">#{operTime},</if>
+            <if test="organId != null">#{organId},</if>
+            <if test="agentId != null">#{agentId},</if>
+            <if test="creator != null">#{creator},</if>
+            <if test="accountId != null">#{accountId},</if>
+            <if test="changeAmount != null">#{changeAmount},</if>
+            <if test="totalPrice != null">#{totalPrice},</if>
+            <if test="payType != null">#{payType},</if>
+            <if test="billType != null">#{billType},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="fileName != null">#{fileName},</if>
+            <if test="salesMan != null">#{salesMan},</if>
+            <if test="accountIdList != null">#{accountIdList},</if>
+            <if test="accountMoneyList != null">#{accountMoneyList},</if>
+            <if test="discount != null">#{discount},</if>
+            <if test="discountMoney != null">#{discountMoney},</if>
+            <if test="discountLastMoney != null">#{discountLastMoney},</if>
+            <if test="otherMoney != null">#{otherMoney},</if>
+            <if test="otherMoneyList != null">#{otherMoneyList},</if>
+            <if test="otherMoneyItem != null">#{otherMoneyItem},</if>
+            <if test="accountDay != null">#{accountDay},</if>
+            <if test="status != null">#{status},</if>
+            <if test="linkNumber != null">#{linkNumber},</if>
+            <if test="tenantId != null">#{tenantId},</if>
+            <if test="deleteFlag != null">#{deleteFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateErpJxcHead" parameterType="ErpJxcHead">
+        update erp_jxc_head
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="type != null">type = #{type},</if>
+            <if test="subType != null">sub_type = #{subType},</if>
+            <if test="defaultNumber != null">default_number = #{defaultNumber},</if>
+            <if test="number != null">number = #{number},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="operTime != null">oper_time = #{operTime},</if>
+            <if test="organId != null">organ_id = #{organId},</if>
+            <if test="agentId != null">agent_id = #{agentId},</if>
+            <if test="creator != null">creator = #{creator},</if>
+            <if test="accountId != null">account_id = #{accountId},</if>
+            <if test="changeAmount != null">change_amount = #{changeAmount},</if>
+            <if test="totalPrice != null">total_price = #{totalPrice},</if>
+            <if test="payType != null">pay_type = #{payType},</if>
+            <if test="billType != null">bill_type = #{billType},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="fileName != null">file_name = #{fileName},</if>
+            <if test="salesMan != null">sales_man = #{salesMan},</if>
+            <if test="accountIdList != null">account_id_list = #{accountIdList},</if>
+            <if test="accountMoneyList != null">account_money_list = #{accountMoneyList},</if>
+            <if test="discount != null">discount = #{discount},</if>
+            <if test="discountMoney != null">discount_money = #{discountMoney},</if>
+            <if test="discountLastMoney != null">discount_last_money = #{discountLastMoney},</if>
+            <if test="otherMoney != null">other_money = #{otherMoney},</if>
+            <if test="otherMoneyList != null">other_money_list = #{otherMoneyList},</if>
+            <if test="otherMoneyItem != null">other_money_item = #{otherMoneyItem},</if>
+            <if test="accountDay != null">account_day = #{accountDay},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="linkNumber != null">link_number = #{linkNumber},</if>
+            <if test="tenantId != null">tenant_id = #{tenantId},</if>
+            <if test="deleteFlag != null">delete_flag = #{deleteFlag},</if>
+        </trim>
+        where jxc_head_id = #{jxcHeadId}
+    </update>
+
+    <delete id="deleteErpJxcHeadById" parameterType="Long">
+        delete from erp_jxc_head where jxc_head_id = #{jxcHeadId}
+    </delete>
+
+    <delete id="deleteErpJxcHeadByIds" parameterType="String">
+        delete from erp_jxc_head where jxc_head_id in 
+        <foreach item="jxcHeadId" collection="array" open="(" separator="," close=")">
+            #{jxcHeadId}
+        </foreach>
+    </delete>
+    
+    <delete id="deleteErpJxcItemByHeaderIds" parameterType="String">
+        delete from erp_jxc_item where header_id in 
+        <foreach item="headerId" collection="array" open="(" separator="," close=")">
+            #{headerId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteErpJxcItemByHeaderId" parameterType="Long">
+        delete from erp_jxc_item where header_id = #{headerId}
+    </delete>
+
+    <insert id="batchErpJxcItem">
+        insert into erp_jxc_item( jxc_item_id, header_id, material_id, material_extend_id, material_unit, oper_number, basic_number, unit_price, tax_unit_price, all_price, remark, img, incidentals, depot_id, another_depot_id, tax_rate, tax_money, tax_last_money, other_field1, other_field2, other_field3, other_field4, other_field5, material_type, tenant_id, delete_flag) values
+		<foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.jxcItemId}, #{item.headerId}, #{item.materialId}, #{item.materialExtendId}, #{item.materialUnit}, #{item.operNumber}, #{item.basicNumber}, #{item.unitPrice}, #{item.taxUnitPrice}, #{item.allPrice}, #{item.remark}, #{item.img}, #{item.incidentals}, #{item.depotId}, #{item.anotherDepotId}, #{item.taxRate}, #{item.taxMoney}, #{item.taxLastMoney}, #{item.otherField1}, #{item.otherField2}, #{item.otherField3}, #{item.otherField4}, #{item.otherField5}, #{item.materialType}, #{item.tenantId}, #{item.deleteFlag})
+        </foreach>
+    </insert>
+</mapper>

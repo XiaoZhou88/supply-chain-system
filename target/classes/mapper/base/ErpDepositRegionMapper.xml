@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdb.scm.base.mapper.ErpDepositRegionMapper">
+    
+    <resultMap type="ErpDepositRegion" id="ErpDepositRegionResult">
+        <result property="depositRegionId"    column="deposit_region_id"    />
+        <result property="regionCode"    column="region_code"    />
+        <result property="regionName"    column="region_name"    />
+        <result property="depositId"    column="deposit_id"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="tanentId"    column="tanent_id"    />
+        <association property="deposit" javaType="ErpDeposit" resultMap="depositValueInfo"/>
+    </resultMap>
+    <resultMap id="depositValueInfo" type="ErpDeposit">
+        <result property="depositId"    column="deposit_id"    />
+        <result property="depositName"    column="deposit_name"    />
+    </resultMap>
+
+    <sql id="selectErpDepositRegionVo">
+        select dr.deposit_region_id, dr.region_code, dr.region_name, dr.deposit_id, dr.del_flag, dr.create_by, dr.create_time, dr.update_by,
+               dr.update_time,dr.remark, dr.tanent_id,d.deposit_name
+        from erp_deposit_region dr
+        left join erp_deposit d on dr.deposit_id = d.deposit_id
+
+    </sql>
+
+    <select id="selectErpDepositRegionList" parameterType="ErpDepositRegion" resultMap="ErpDepositRegionResult">
+        <include refid="selectErpDepositRegionVo"/>
+        <where>  
+            <if test="regionCode != null  and regionCode != ''"> and region_code = #{regionCode}</if>
+            <if test="regionName != null  and regionName != ''"> and region_name like concat('%', #{regionName}, '%')</if>
+            <if test="depositId != null "> and dr.deposit_id = #{depositId}</if>
+        </where>
+    </select>
+    
+    <select id="selectErpDepositRegionById" parameterType="Long" resultMap="ErpDepositRegionResult">
+        <include refid="selectErpDepositRegionVo"/>
+        where deposit_region_id = #{depositRegionId}
+    </select>
+        
+    <insert id="insertErpDepositRegion" parameterType="ErpDepositRegion" useGeneratedKeys="true" keyProperty="depositRegionId">
+        insert into erp_deposit_region
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="regionCode != null">region_code,</if>
+            <if test="regionName != null">region_name,</if>
+            <if test="depositId != null">deposit_id,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="tanentId != null">tanent_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="regionCode != null">#{regionCode},</if>
+            <if test="regionName != null">#{regionName},</if>
+            <if test="depositId != null">#{depositId},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="tanentId != null">#{tanentId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateErpDepositRegion" parameterType="ErpDepositRegion">
+        update erp_deposit_region
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="regionCode != null">region_code = #{regionCode},</if>
+            <if test="regionName != null">region_name = #{regionName},</if>
+            <if test="depositId != null">deposit_id = #{depositId},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="tanentId != null">tanent_id = #{tanentId},</if>
+        </trim>
+        where deposit_region_id = #{depositRegionId}
+    </update>
+
+    <delete id="deleteErpDepositRegionById" parameterType="Long">
+        delete from erp_deposit_region where deposit_region_id = #{depositRegionId}
+    </delete>
+
+    <delete id="deleteErpDepositRegionByIds" parameterType="String">
+        delete from erp_deposit_region where deposit_region_id in 
+        <foreach item="depositRegionId" collection="array" open="(" separator="," close=")">
+            #{depositRegionId}
+        </foreach>
+    </delete>
+</mapper>
